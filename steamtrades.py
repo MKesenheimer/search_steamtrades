@@ -27,4 +27,4 @@ for j in range(0,len(hlines)):
         browser.find_element_by_class_name("trade__search-submit").click()
         results = browser.find_element_by_class_name("pagination__results").text
         if results not in "No results were found.":
-            print "Found result for [H]", hlines[j],"[H]",wlines[i]
+            print "Found result for [H]", hlines[j],"[W]",wlines[i]
