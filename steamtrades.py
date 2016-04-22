@@ -15,12 +15,12 @@ wlines = [line.rstrip('\n') for line in open("wgames.list")]
 hlines = [line.rstrip('\n') for line in open("hgames.list")]
 
 browser = webdriver.Firefox()
-#browser.get("http://www.steamgifts.com/trades")
+browser.get("http://www.steamgifts.com/trades")
 #try:
 #    input("Please login through Steam and press Enter to continue...")
 #except SyntaxError:
 #    pass
-browser.get("http://www.steamgifts.com/trades")
+#browser.get("http://www.steamgifts.com/trades")
 results = "No results were found."
 
 # don't show or show the locked links
@@ -46,10 +46,15 @@ for i in range(0, len(wlines)):
     browser.find_element_by_class_name("trade__search-want").send_keys(wlines[i])
     browser.find_element_by_class_name("trade__search-submit").click()
     results = browser.find_element_by_class_name("pagination__results").text
+    # reset the browser (sometimes an error occured when the page was still filled
+    browser.get("http://www.steamgifts.com/trades")
     
     # if the search was succesful, continue
     if results not in "No results were found.":
         for j in range(0,len(hlines)):
+            
+            # reset
+            results = "No results were found."
             
             # then check every combination
             browser.find_element_by_class_name("trade__search-have").clear()
@@ -57,8 +62,9 @@ for i in range(0, len(wlines)):
             browser.find_element_by_class_name("trade__search-want").clear()
             browser.find_element_by_class_name("trade__search-want").send_keys(wlines[i])
             browser.find_element_by_class_name("trade__search-submit").click()
-            results  = browser.find_element_by_class_name("pagination__results").text
-            
+            time.sleep(2)
+            results = browser.find_element_by_class_name("pagination__results").text
+            print results
             # if a combination gives results, print informations
             if results not in "No results were found.":
                 
@@ -107,6 +113,15 @@ for i in range(0, len(wlines)):
 
 
 
-
-
-
+# NOTES: instead of using the lengthy expressions with browser.find_element_by_class_name
+# a url-based search could be used. For that, the search is encoded in an url query of the form:
+# https://www.steamgifts.com/trades/search?have=name1&want=name2
+#
+# The code could look like that:
+#   url = "https://www.steamgifts.com/trades/search?"
+#   link = url+"have="+hlines[j]+"want="+wlines[i]
+#   link = link.replace(" ","+")
+#   print link
+#   browser.get(link)
+#
+# Problem: Selenium ignores every '+' character in the url, which makes this method useless for now.
