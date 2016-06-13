@@ -62,9 +62,8 @@ for i in range(0, len(wlines)):
             browser.find_element_by_class_name("trade__search-want").clear()
             browser.find_element_by_class_name("trade__search-want").send_keys(wlines[i])
             browser.find_element_by_class_name("trade__search-submit").click()
-            time.sleep(2)
             results = browser.find_element_by_class_name("pagination__results").text
-            print results
+            #print results
             # if a combination gives results, print informations
             if results not in "No results were found.":
                 
